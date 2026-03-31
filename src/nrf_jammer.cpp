@@ -12,6 +12,10 @@ const int ENC_CLK_J = 48;
 const int ENC_DT_J  = 46;
 const int ENC_SW_J  = 3;
 
+// Pines de botones (Basados en tu tabla de conexiones)
+const int BTN_UP_J = 1;
+const int BTN_DOWN_J = 2;
+
 extern RF24 nrf1; 
 extern RF24 nrf2; 
 
@@ -88,7 +92,21 @@ void showNRFJammer(LGFX &tft, bool &inSubMenu, int btnBack) {
         }
         lastClkJ = currentClk;
 
-        // --- ENCODER (Click Corto/Largo) ---
+        // --- BOTONES UP / DOWN (Añadido) ---
+        if (!isAttacking) {
+            if (digitalRead(BTN_UP_J) == LOW) {
+                wifiChannel = (wifiChannel <= 1) ? 14 : wifiChannel - 1;
+                redraw = true;
+                delay(150); // Debounce
+            }
+            if (digitalRead(BTN_DOWN_J) == LOW) {
+                wifiChannel = (wifiChannel >= 14) ? 1 : wifiChannel + 1;
+                redraw = true;
+                delay(150); // Debounce
+            }
+        }
+
+        // --- ENCODER (Click Corto/Largo) y BOTON ENTER (GPIO 42) ---
         if (digitalRead(ENC_SW_J) == LOW || digitalRead(42) == LOW) {
             unsigned long startP = millis();
             bool isLong = false;

@@ -61,6 +61,32 @@ El firmware está dividido en módulos `.cpp` especializados para maximizar el r
 
 ---
 
+---
+
+## 📸 Galería del Proyecto (Hardware & Build)
+
+A continuación se muestra el proceso de ensamble, cableado y pruebas del **Cyberdeck Mini S3**.
+
+| | | |
+|:---:|:---:|:---:|
+| ![1](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/1.jpg?raw=true) | ![2](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/2.jpg?raw=true) | ![3](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/3.jpg?raw=true) |
+| ![4](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/4.jpg?raw=true) | ![5](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/5.jpg?raw=true) | ![6](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/6.jpg?raw=true) |
+| ![7](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/7.jpg?raw=true) | ![8](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/8.jpg?raw=true) | ![9](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/9.jpg?raw=true) |
+| ![10](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/10.jpg?raw=true) | ![11](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/11.jpg?raw=true) | ![12](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/12.jpg?raw=true) |
+| ![13](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/13.jpg?raw=true) | ![14](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/14.jpg?raw=true) | ![15](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/15.jpg?raw=true) |
+| ![16](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/16.jpg?raw=true) | ![17](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/17.jpg?raw=true) | ![18](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/18.jpg?raw=true) |
+| ![19](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/19.jpg?raw=true) | ![20](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/20.jpg?raw=true) | ![21](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/21.jpg?raw=true) |
+| ![22](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/22.jpg?raw=true) | ![23](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/23.jpg?raw=true) | ![24](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/24.jpg?raw=true) |
+| ![25](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/25.jpg?raw=true) | ![26](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/26.jpg?raw=true) | ![27](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/27.jpg?raw=true) |
+| ![28](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/28.jpg?raw=true) | ![29](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/29.jpg?raw=true) | ![30](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/30.jpg?raw=true) |
+| ![31](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/31.jpg?raw=true) | ![32](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/32.jpg?raw=true) | ![33](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/33.jpg?raw=true) |
+| ![34](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/34.jpg?raw=true) | | |
+
+---
+
+
+
+
 ## ⚠️ Advertencia Legal (Disclaimer)
 
 Este proyecto ha sido desarrollado con fines exclusivamente educativos y de auditoría de seguridad ética. El uso de este equipo para interrumpir comunicaciones sin autorización previa es ilegal en muchas jurisdicciones. El desarrollador no se hace responsable del mal uso de esta herramienta.
