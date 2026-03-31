@@ -8,10 +8,21 @@ extern RF24 nrf1;
 #define MATRIX_GREEN 0x07E0
 #endif
 
-// Pines del encoder
+// Pines del hardware
 const int ENC_CLK_S = 48;
 const int ENC_DT_S  = 46;
 const int ENC_SW_S  = 3;
+const int PIN_BUZZER_S = 14; 
+
+// Función de estática mejorada para Buzzers Pasivos
+void playRadioStatic(int height) {
+    if (height > 10) {
+        // Generamos una frecuencia aleatoria entre 1000Hz y 3000Hz
+        // La duración es mínima (1ms) para no alentar el escaneo
+        int freq = random(1000, 3500); 
+        tone(PIN_BUZZER_S, freq, 1); 
+    }
+}
 
 void showNRFSpectrogram(LGFX &tft, bool &inSubMenu, int btnBack) {
     // 1. REINICIO DE RADIO
@@ -32,15 +43,13 @@ void showNRFSpectrogram(LGFX &tft, bool &inSubMenu, int btnBack) {
     int values[125]; 
     memset(values, 0, sizeof(values));
     int fallSpeed = 3; 
-    
-    // IMPORTANTE: Leer el estado inicial antes del while
     int lastClkS = digitalRead(ENC_CLK_S);
 
     while (inSubMenu) {
-        // --- 1. LÓGICA DEL ENCODER (AJUSTE RÁPIDO) ---
+        // --- 1. LÓGICA DEL ENCODER ---
         int currentClk = digitalRead(ENC_CLK_S);
-        if (currentClk != lastClkS) { // Detectar cualquier cambio
-            if (currentClk == LOW) { // Solo cuando baja (flanco de bajada)
+        if (currentClk != lastClkS) {
+            if (currentClk == LOW) {
                 if (digitalRead(ENC_DT_S) != currentClk) {
                     fallSpeed = constrain(fallSpeed + 1, 1, 15);
                 } else {
@@ -71,6 +80,8 @@ void showNRFSpectrogram(LGFX &tft, bool &inSubMenu, int btnBack) {
 
             if (signalDetected) {
                 if (values[i] < 140) values[i] += 20; 
+                // Ahora llamamos a tone() para asegurar sonido en buzzers pasivos
+                playRadioStatic(values[i]);
             } else {
                 if (values[i] > 0) values[i] -= fallSpeed; 
                 if (values[i] < 0) values[i] = 0;
@@ -81,7 +92,6 @@ void showNRFSpectrogram(LGFX &tft, bool &inSubMenu, int btnBack) {
             int y_base = 200;
             int h = values[i];
 
-            // Solo dibuja si estamos en el rango visible
             tft.drawFastVLine(x, 60, 140, TFT_BLACK); // Limpiar columna
             
             if (h > 0) {
@@ -108,5 +118,6 @@ void showNRFSpectrogram(LGFX &tft, bool &inSubMenu, int btnBack) {
         yield(); 
     }
     
+    noTone(PIN_BUZZER_S); // Asegurarnos de apagar el sonido al salir
     nrf1.powerDown();
 }

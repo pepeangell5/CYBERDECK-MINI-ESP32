@@ -37,19 +37,30 @@ unsigned long lastBattUpdate = 0;
 
 LGFX tft;
 int menuIndex = 0;
-// CORRECCIÓN: Subimos a 14 opciones para incluir BLE JAMMER
 const int totalOptions = 14; 
 
 TinyGPSPlus gps;
 HardwareSerial gpsSerial(1); 
 
-// CORRECCIÓN: Añadido "BLE JAMMER" al final de la lista
 const char* options[] = { 
     "WIFI SCANNER", "BEACON SPAMMER", "EVIL PORTAL", "PACKET MONITOR", 
     "GPS TRACKER", "NRF ANALYZER", "NRF JAMMER", "NRF SPECTRUM", 
     "FILE EXPLORER", "VIEW LOGS", "SYSTEM STATUS", "GAMES ARCADE", 
     "BLE JAMMER","ABOUT SYSTEM"
 };
+
+// --- FUNCIONES DE SONIDO ---
+void menuBeep() {
+    digitalWrite(PIN_BUZZER, HIGH); 
+    delay(20); // Beep corto para navegación
+    digitalWrite(PIN_BUZZER, LOW);
+}
+
+void selectBeep() {
+    digitalWrite(PIN_BUZZER, HIGH); 
+    delay(60); // Beep más largo para selección
+    digitalWrite(PIN_BUZZER, LOW);
+}
 
 void drawBatteryIcon() {
     analogSetAttenuation(ADC_11db);
@@ -78,12 +89,6 @@ void drawBatteryIcon() {
     tft.fillRect(300, 17, 2, 6, TFT_BLACK); 
 }
 
-void menuBeep() {
-    digitalWrite(PIN_BUZZER, HIGH); 
-    delay(30); 
-    digitalWrite(PIN_BUZZER, LOW);
-}
-
 void drawMenu() {
     tft.startWrite();
     tft.fillScreen(TFT_BLACK);
@@ -96,7 +101,6 @@ void drawMenu() {
     tft.printf("PEPEANGELL >#%d/%d", menuIndex + 1, totalOptions);
 
     drawBatteryIcon();
-
     drawGlifoIcon(tft, 160, 110, menuIndex);
 
     tft.setTextColor(TFT_WHITE);
@@ -151,6 +155,7 @@ void loop() {
         lastBattUpdate = millis();
     }
 
+    // --- LOGICA DEL ENCODER ---
     int currentClk = digitalRead(ENC_CLK);
     if (currentClk != lastClk && currentClk == LOW) {
         if (digitalRead(ENC_DT) != currentClk) {
@@ -158,36 +163,36 @@ void loop() {
         } else {
             menuIndex = (menuIndex <= 0) ? totalOptions - 1 : menuIndex - 1;
         }
+        menuBeep(); // Beep al girar
         changed = true;
     }
     lastClk = currentClk;
 
+    // --- LOGICA DE BOTONES ---
     if (digitalRead(BTN_UP) == LOW) { 
         menuIndex = (menuIndex <= 0) ? totalOptions - 1 : menuIndex - 1;
+        menuBeep(); // Beep al presionar UP
         changed = true;
         delay(200); 
     }
     
     if (digitalRead(BTN_DOWN) == LOW) { 
         menuIndex = (menuIndex >= totalOptions - 1) ? 0 : menuIndex + 1;
+        menuBeep(); // Beep al presionar DOWN
         changed = true;
         delay(200); 
     }
 
     if (changed) {
-        menuBeep();
         drawMenu();
     }
     
+    // --- SELECCION (ENTER / CLICK) ---
     if (digitalRead(BTN_ENTER) == LOW || digitalRead(ENC_SW) == LOW) {
-        digitalWrite(PIN_BUZZER, HIGH); 
-        delay(80); 
-        digitalWrite(PIN_BUZZER, LOW);
-        
+        selectBeep(); // Tono de selección
         delay(250);
         bool inSubMenu = true;
         
-        // --- LANZADOR DE HERRAMIENTAS ---
         if (menuIndex == 0)      showWiFiScanner(tft, inSubMenu, BTN_BACK, BTN_ENTER);
         else if (menuIndex == 1) showBeaconSpammer(tft, inSubMenu, BTN_BACK);
         else if (menuIndex == 2) showEvilPortal(tft, inSubMenu, BTN_BACK);

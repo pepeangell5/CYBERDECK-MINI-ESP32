@@ -6,6 +6,7 @@
 #define GRAPH_HEIGHT 150 
 #define GRAPH_BOTTOM 215 
 #define HEADER_H 40
+#define PIN_BUZZER_PM 14 // Pin del buzzer de tu Cyberdeck
 
 // Pines del encoder
 const int ENC_CLK_P = 48;
@@ -24,6 +25,15 @@ bool autoHop = true;
 int monitor_channel = 1;
 
 LGFX_Sprite graphCanvas(&tft);
+
+// Función para el beep de paquetes (Corta para no alentar el sistema)
+void packetBeep(uint32_t count) {
+    if (count > 0) {
+        // Si hay muchos paquetes, el tono es más alto y agresivo
+        int freq = (count > 40) ? 2500 : 1200;
+        tone(PIN_BUZZER_PM, freq, 2); // Beep ultra corto de 2ms
+    }
+}
 
 void sniffer_callback(void* buf, wifi_promiscuous_pkt_type_t type) {
     count_all++;
@@ -55,8 +65,6 @@ void showPacketMonitor(LGFX &tft, bool &inSubMenu, int btnBack) {
         }
 
         // 2. CONTROLES: ENCODER Y BOTONES
-        
-        // --- GIRO DEL ENCODER (Solo en modo Manual) ---
         int currentClk = digitalRead(ENC_CLK_P);
         if (!autoHop && currentClk != lastClkP && currentClk == LOW) {
             if (digitalRead(ENC_DT_P) != currentClk) {
@@ -69,7 +77,6 @@ void showPacketMonitor(LGFX &tft, bool &inSubMenu, int btnBack) {
         }
         lastClkP = currentClk;
 
-        // --- BOTONES FÍSICOS (Manual) ---
         if (!autoHop) {
             if (digitalRead(1) == LOW) { // UP
                 monitor_channel = (monitor_channel <= 1) ? 13 : monitor_channel - 1;
@@ -83,27 +90,28 @@ void showPacketMonitor(LGFX &tft, bool &inSubMenu, int btnBack) {
             }
         }
 
-        // --- CLIC: CORTO (Modo) / LARGO (Back) ---
         if (digitalRead(42) == LOW || digitalRead(ENC_SW_P) == LOW) {
             unsigned long startPress = millis();
             bool longPress = false;
-            
             while(digitalRead(42) == LOW || digitalRead(ENC_SW_P) == LOW) {
                 if (millis() - startPress > 600) { longPress = true; break; }
                 yield();
             }
-
             if (longPress) {
-                inSubMenu = false; // Salir
+                inSubMenu = false; 
             } else {
-                autoHop = !autoHop; // Cambiar modo SCAN/MAN
+                autoHop = !autoHop; 
                 delay(100);
             }
         }
 
-        // 3. INTERFAZ Y GRÁFICA
+        // 3. INTERFAZ, GRÁFICA Y SONIDO
         if (now - lastPktUpdate > 50) { 
             uint32_t snap_all = count_all;
+            
+            // --- AÑADIDO: SONIDO DE DETECCION ---
+            packetBeep(snap_all);
+
             count_all = 0;
             count_data = 0;
 
@@ -147,6 +155,7 @@ void showPacketMonitor(LGFX &tft, bool &inSubMenu, int btnBack) {
         yield();
     }
     
+    noTone(PIN_BUZZER_PM); // Asegurar silencio al salir
     esp_wifi_set_promiscuous(false);
     graphCanvas.deleteSprite(); 
 }

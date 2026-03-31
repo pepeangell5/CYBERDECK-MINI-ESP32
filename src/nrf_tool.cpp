@@ -8,6 +8,9 @@
 #define MATRIX_YELLOW 0xFFE0
 #define MATRIX_RED    0xF800
 
+// Pin del Buzzer
+const int PIN_BUZZER_N = 14; 
+
 // Pines del encoder
 const int ENC_CLK_N = 48;
 const int ENC_DT_N  = 46;
@@ -15,6 +18,16 @@ const int ENC_SW_N  = 3;
 
 RF24 nrf1(4, 5); // Scanner A
 RF24 nrf2(6, 7); // Scanner B
+
+// Función de sonido básico de ruido
+void playScanClick(int val) {
+    if (val > 10) {
+        // Un click rápido basado en la intensidad
+        digitalWrite(PIN_BUZZER_N, HIGH);
+        delayMicroseconds(100); 
+        digitalWrite(PIN_BUZZER_N, LOW);
+    }
+}
 
 void showNRFTool(LGFX &tft, bool &inSubMenu, int btnBack) {
     tft.fillScreen(TFT_BLACK);
@@ -24,6 +37,7 @@ void showNRFTool(LGFX &tft, bool &inSubMenu, int btnBack) {
 
     pinMode(5, OUTPUT); digitalWrite(5, HIGH); 
     pinMode(7, OUTPUT); digitalWrite(7, HIGH); 
+    pinMode(PIN_BUZZER_N, OUTPUT); // Aseguramos que el pin sea salida
     delay(50);
 
     if (!nrf1.begin() || !nrf2.begin()) {
@@ -94,12 +108,18 @@ void showNRFTool(LGFX &tft, bool &inSubMenu, int btnBack) {
 
             nrf1.setChannel(ch1); nrf1.startListening();
             delayMicroseconds(120); nrf1.stopListening();
-            if (nrf1.testCarrier()) values[ch1] = min(values[ch1] + 25, 145);
+            if (nrf1.testCarrier()) {
+                values[ch1] = min(values[ch1] + 25, 145);
+                playScanClick(values[ch1]); // Sonido si hay portadora
+            }
             else values[ch1] = max(values[ch1] - decayValue, 0);
 
             nrf2.setChannel(ch2); nrf2.startListening();
             delayMicroseconds(120); nrf2.stopListening();
-            if (nrf2.testCarrier()) values[ch2] = min(values[ch2] + 25, 145);
+            if (nrf2.testCarrier()) {
+                values[ch2] = min(values[ch2] + 25, 145);
+                playScanClick(values[ch2]); // Sonido si hay portadora
+            }
             else values[ch2] = max(values[ch2] - decayValue, 0);
 
             int x1 = getX(ch1);
