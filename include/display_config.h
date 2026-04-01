@@ -1,8 +1,7 @@
 #ifndef DISPLAY_CONFIG_H
 #define DISPLAY_CONFIG_H
-
 #include <LovyanGFX.hpp>
-
+extern LGFX_Sprite* globalCanvas;
 class LGFX : public lgfx::LGFX_Device {
   lgfx::Panel_ST7789  _panel_instance; 
   lgfx::Bus_SPI       _bus_instance;
