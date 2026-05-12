@@ -1,97 +1,182 @@
-# 📟 CYBERDECK-MINI-ESP32 (PEPE-OS V2.1)
+# CYBERDECK MINI ESP32
 
-![License](https://img.shields.io/badge/License-Open%20Source-green)
-![Hardware](https://img.shields.io/badge/Hardware-ESP32--S3-orange)
-![Origin](https://img.shields.io/badge/Origin-Sinaloa%2C%20Mexico-red)
-![Developer](https://img.shields.io/badge/Dev-PepeAngell-blue)
+Firmware para un cyberdeck portatil basado en ESP32-S3, pantalla TFT ST7789 240x320, doble radio nRF24L01, GPS NEO-6M, microSD, encoder y botones fisicos. El proyecto esta pensado para aprendizaje, monitoreo defensivo, diagnostico de hardware y demostraciones de ciberseguridad dentro de un marco legal y etico.
 
-**CYBERDECK-MINI** es una herramienta portátil de auditoría de radiofrecuencia y redes basada en el potente **ESP32-S3**. Este dispositivo integra múltiples capacidades de ataque y monitoreo en la banda de 2.4GHz, GPS tracking y un entorno gráfico personalizado (PEPE-OS) optimizado para velocidad y sigilo.
+> Usa este firmware solo en redes, laboratorios y dispositivos propios o con autorizacion explicita. Las herramientas de radio, WiFi y Bluetooth deben usarse de forma responsable para pruebas, auditoria y educacion.
 
----
+![Menu principal](img/menu_principal.JPG)
 
-## 🛠️ Especificaciones Técnicas (Hardware)
+## Estado del proyecto
 
-El sistema utiliza un **ESP32-S3 N8R2**, configurado para gestionar un bus SPI compartido de alta velocidad entre la pantalla, el almacenamiento SD y los módulos de radio.
+- Interfaz adaptada a pantalla ST7789 240x320 en orientacion horizontal.
+- Navegacion con 4 botones y encoder.
+- Splash de inicio con ajolote conservado.
+- MicroSD en bus SPI dedicado.
+- GPS Tools Pro con dashboard, logger CSV, brujula por movimiento y waypoints.
+- MicroSD Manager con browser, visor rapido de reportes, carpetas, indice y limpieza segura.
+- Herramientas defensivas para WiFi, BLE y radio 2.4 GHz.
+- Reportes exportables a microSD.
 
-### 🔌 Pinout & Conexiones
+## Galeria
 
-| Periférico | Pin Función | Pin ESP32-S3 | Nota Táctica |
-| :--- | :--- | :--- | :--- |
-| **Pantalla ST7789** | SDI (MOSI) / SCK | GPIO 11 / 12 | Bus SPI compartido. |
-| **Pantalla ST7789** | CS / DC / RESET | GPIO 10 / 21 / 47 | Control de señal. |
-| **Dual nRF24L01** | CE / CSN (#1 Scan) | GPIO 4 / 5 | Módulo de análisis. |
-| **Dual nRF24L01** | CE / CSN (#2 Jam) | GPIO 6 / 7 | Módulo de saturación. |
-| **MicroSD Slot** | CS / MOSI / MISO | GPIO 38 / 11 / 13 | Almacenamiento FAT32. |
-| **Encoder Rotativo** | CLK / DT / SW | GPIO 48 / 46 / 3 | Navegación de precisión. |
-| **Botones Físicos** | UP/DN/ENT/BACK | GPIO 1, 2, 42, 41 | Navegación rápida (GND). |
-| **GPS NEO-6M** | TX / RX | GPIO 18 / 17 | Serial 1 Hardware. |
-| **Buzzer** | Signal (+) | GPIO 14 | Feedback auditivo. |
-| **Battery Monitor**| Divider (VCC) | GPIO 9 | Divisor 2.2k + 1k Ohms. |
+| Menu principal | WiFi tools |
+| --- | --- |
+| ![Menu principal](img/menu_principal.JPG) | ![WiFi tools](img/wifi_tool.JPG) |
 
----
+| WiFi tools 2 | Radio tools |
+| --- | --- |
+| ![WiFi tools 2](img/wifi_tool_2.JPG) | ![Radio tools](img/radio_tool.JPG) |
 
-## 📱 Suite de Aplicaciones (Firmware Modules)
+| Bluetooth | Packet monitor |
+| --- | --- |
+| ![Bluetooth](img/bluetooth.JPG) | ![Packet monitor](img/pkt_monitor.JPG) |
 
-El firmware está dividido en módulos `.cpp` especializados para maximizar el rendimiento del ESP32-S3:
+| System | System tools |
+| --- | --- |
+| ![System](img/system.JPG) | ![System tools](img/system2.JPG) |
 
-* 📡 **WiFi Tool / Scanner:** Monitoreo y gestión de redes inalámbricas.
-* ⚠️ **Beacon Spammer:** Generación masiva de tramas Beacon (SSID flooding).
-* 😈 **Evil Portal:** Portales cautivos para auditoría de ingeniería social.
-* 🛡️ **Packet Monitor:** Analizador de tráfico en tiempo real.
-* 📍 **GPS Tracker:** Registro y visualización de coordenadas satelitales.
-* ⚡ **NRF Jammer (Dual):** Ataque coordinado de 2.4GHz (Inundación de canales).
-* 📊 **NRF Spectrogram:** Visualizador gráfico de interferencias RF.
-* 🏥 **BLE Jammer:** Ataque agresivo contra protocolos Bluetooth con animación EKG roja.
-* 📂 **File Explorer:** Navegador de archivos en la tarjeta SD.
-* 🕹️ **Games Menu:** Sección de juegos arcade retro integrados.
+| Threat monitor |
+| --- |
+| ![Threat monitor](img/threat_mon.JPG) |
 
----
+## Hardware objetivo
 
-## 🚀 Instalación y Compilación
+- ESP32-S3 DevKitC-1 N8 o compatible.
+- Pantalla TFT ST7789 SPI 240x320.
+- 2 modulos nRF24L01.
+- GPS NEO-6M por UART1.
+- Lector microSD en SPI dedicado.
+- Encoder rotativo con boton.
+- 4 botones fisicos: UP, DOWN, ENTER y BACK.
+- Buzzer.
+- Lectura ADC de bateria mediante divisor resistivo 2.2k / 1k.
 
-1.  **Requisitos:** Tener instalado **VS Code** con la extensión **PlatformIO**.
-2.  **Clonar Repo:** ```bash
-    git clone [https://github.com/pepeangell5/CYBERDECK-MINI-ESP32.git](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32.git)
-    ```
-3.  **Librerías principales:**
-    * `LovyanGFX`
-    * `RF24`
-    * `TinyGPSPlus`
-4.  **Upload:** Conectar el S3 y ejecutar el comando de carga en PlatformIO.
+## Pinout usado
 
----
+| Periferico | Funcion | GPIO |
+| --- | --- | --- |
+| TFT ST7789 | SCK | 12 |
+| TFT ST7789 | MOSI | 11 |
+| TFT ST7789 | MISO | 13 |
+| TFT ST7789 | CS | 10 |
+| TFT ST7789 | DC | 21 |
+| TFT ST7789 | RST | 14 |
+| nRF24 #1 | CE / CSN | 4 / 5 |
+| nRF24 #2 | CE / CSN | 6 / 7 |
+| microSD | SCK / MOSI / MISO / CS | 36 / 35 / 37 / 16 |
+| GPS NEO-6M | RX / TX | 18 / 17 |
+| Botones | UP / DOWN / ENTER / BACK | 1 / 2 / 42 / 41 |
+| Encoder | CLK / DT / SW | 40 / 39 / 38 |
+| Buzzer | Signal | 15 |
+| Bateria ADC | VBAT | 9 |
 
----
+## Navegacion
 
-## 📸 Galería del Proyecto (Hardware & Build)
+- `UP` / `DOWN`: mover seleccion.
+- Encoder: mover seleccion en menus y herramientas compatibles.
+- `ENTER` u OK: abrir, seleccionar o ejecutar accion.
+- `BACK`: regresar o salir.
+- OK mantenido: regreso alternativo o accion secundaria cuando la pantalla lo indique.
 
-A continuación se muestra el proceso de ensamble, cableado y pruebas del **Cyberdeck Mini S3**.
+## Funciones principales
 
-| | | |
-|:---:|:---:|:---:|
-| ![1](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/1.jpg?raw=true) | ![2](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/2.jpg?raw=true) | ![3](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/3.jpg?raw=true) |
-| ![4](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/4.jpg?raw=true) | ![5](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/5.jpg?raw=true) | ![6](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/6.jpg?raw=true) |
-| ![7](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/7.jpg?raw=true) | ![8](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/8.jpg?raw=true) | ![9](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/9.jpg?raw=true) |
-| ![10](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/10.jpg?raw=true) | ![11](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/11.jpg?raw=true) | ![12](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/12.jpg?raw=true) |
-| ![13](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/13.jpg?raw=true) | ![14](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/14.jpg?raw=true) | ![15](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/15.jpg?raw=true) |
-| ![16](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/16.jpg?raw=true) | ![17](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/17.jpg?raw=true) | ![18](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/18.jpg?raw=true) |
-| ![19](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/19.jpg?raw=true) | ![20](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/20.jpg?raw=true) | ![21](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/21.jpg?raw=true) |
-| ![22](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/22.jpg?raw=true) | ![23](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/23.jpg?raw=true) | ![24](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/24.jpg?raw=true) |
-| ![25](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/25.jpg?raw=true) | ![26](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/26.jpg?raw=true) | ![27](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/27.jpg?raw=true) |
-| ![28](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/28.jpg?raw=true) | ![29](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/29.jpg?raw=true) | ![30](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/30.jpg?raw=true) |
-| ![31](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/31.jpg?raw=true) | ![32](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/32.jpg?raw=true) | ![33](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/33.jpg?raw=true) |
-| ![34](https://github.com/pepeangell5/CYBERDECK-MINI-ESP32/blob/main/img/34.jpg?raw=true) | | |
+### WiFi
 
----
+- WiFi Scanner con detalles de SSID, BSSID, canal, RSSI y seguridad.
+- Threat Monitor defensivo para detectar actividad anomala como beacon spam o eventos de deauth/disassoc.
+- WiFi Audit para revisar redes abiertas, debiles, ocultas o posibles clones.
+- Probe Sniffer para observar probes de forma pasiva.
+- Reportes exportables a microSD.
 
+### Radio 2.4 GHz
 
+- Spectrum analyzer con 3 modos visuales.
+- RF Baseline defensivo para comparar actividad actual contra una linea base.
+- Reporte `/RF_BASELINE.txt` en microSD.
+- Soporte para doble nRF24L01.
 
+### Bluetooth / BLE
 
-## ⚠️ Advertencia Legal (Disclaimer)
+- BLE Defense para auditoria pasiva de dispositivos cercanos.
+- BLE Scanner con lista y detalles.
+- Reporte `/BLE_AUDIT.txt` en microSD.
 
-Este proyecto ha sido desarrollado con fines exclusivamente educativos y de auditoría de seguridad ética. El uso de este equipo para interrumpir comunicaciones sin autorización previa es ilegal en muchas jurisdicciones. El desarrollador no se hace responsable del mal uso de esta herramienta.
+### GPS Tools Pro
 
----
+- Dashboard Pro con fix, satelites, HDOP, edad, latitud, longitud, altitud, velocidad, rumbo y UTC.
+- Track Logger en `/GPS_TRACK.csv`.
+- Waypoint Mark en `/GPS_MARKS.csv`.
+- Compass basado en rumbo GPS por movimiento.
+- Snapshot en `/GPS_SNAPSHOT.txt`.
+- Consola NMEA para diagnostico.
 
-**Desarrollado por PepeAngell** 📍 Los Mochis, Sinaloa, México | 2026  
-*Software Engineer | Electronics Enthusiast*
+### MicroSD Manager
+
+- Browser de archivos con visor de texto para `.txt`, `.csv`, `.log`, `.json`, `.md`, `.nmea` y `.gps`.
+- Quick Reports para abrir reportes generados.
+- Creacion de carpetas: `/GPS`, `/REPORTS`, `/LOGS`, `/EXPORTS`, `/CAPTURES`.
+- Export SD Index en `/SD_INDEX.txt`.
+- Clean Reports con confirmacion por OK mantenido.
+- SD Info con tipo, tamano, uso y velocidad SPI.
+
+### Sistema
+
+- Mission Dashboard con estado general de bateria, GPS, SD y radios.
+- Audit Reports.
+- Battery ADC con estimacion para Li-ion/LiPo 1S.
+- Clock & Weather.
+- System Info.
+- Settings.
+- About.
+
+## Archivos generados en microSD
+
+| Archivo | Origen |
+| --- | --- |
+| `/GPS_TRACK.csv` | GPS Track Logger |
+| `/GPS_MARKS.csv` | Dashboard Pro / Waypoint Mark |
+| `/GPS_SNAPSHOT.txt` | Export Snapshot |
+| `/THREAT_REPORT.txt` | Threat Monitor |
+| `/WIFI_DEFENSE.txt` | WiFi Audit |
+| `/WIFI_AUDIT.csv` | Audit Reports |
+| `/RF_BASELINE.txt` | RF Baseline |
+| `/BLE_AUDIT.txt` | BLE Defense |
+| `/BATTERY_STATUS.txt` | Battery report |
+| `/SD_INDEX.txt` | MicroSD Manager |
+
+## Compilar
+
+Instala PlatformIO y ejecuta:
+
+```powershell
+pio run
+```
+
+## Subir al ESP32-S3
+
+Conecta el dispositivo por USB y ejecuta:
+
+```powershell
+pio run -t upload
+```
+
+Si PlatformIO no detecta el puerto, revisa el cable USB, drivers y modo BOOT del ESP32-S3.
+
+## Estructura relevante
+
+```text
+include/      Headers del firmware
+src/          Codigo principal
+img/          Capturas usadas por este README
+firmware/     Binarios para flasher/web tools
+```
+
+## Redes
+
+- Instagram: https://instagram.com/pepeangelll
+- Facebook: https://www.facebook.com/esp32tools/
+- GitHub: https://github.com/pepeangell5
+
+## Licencia
+
+Consulta `LICENSE`.
