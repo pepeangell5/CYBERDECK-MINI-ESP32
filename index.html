@@ -3,206 +3,562 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ESP32-TOOLS MODERN | Web Flasher</title>
-  <meta name="description" content="Flashea ESP32-TOOLS MODERN directamente desde Chrome o Edge usando ESP Web Tools.">
-  <meta name="theme-color" content="#000000">
+  <title>CYBERDECK MINI ESP32 | Web Flasher</title>
+  <meta name="description" content="Flashea CYBERDECK MINI ESP32 desde Chrome o Edge usando ESP Web Tools.">
+  <meta name="theme-color" content="#020403">
+  <meta property="og:title" content="CYBERDECK MINI ESP32 Web Flasher">
+  <meta property="og:description" content="Firmware cyberdeck defensivo para ESP32-S3 con TFT, GPS, microSD, WiFi, BLE y radio tools.">
+  <meta property="og:type" content="website">
   <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #000;
-      --panel: #0b0b0b;
-      --line: #2b2b2b;
-      --text: #fff;
-      --muted: #b8b8b8;
-      --soft: #151515;
+      --bg: #020403;
+      --panel: #07110e;
+      --panel-2: #0b1714;
+      --line: #1dff8f;
+      --line-soft: rgba(29, 255, 143, .3);
+      --hot: #ff4d2e;
+      --amber: #ffd166;
+      --cyan: #26d9ff;
+      --text: #e8fff4;
+      --muted: #8dbfa6;
+      --shadow: rgba(29, 255, 143, .18);
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
+      background:
+        linear-gradient(rgba(29, 255, 143, .04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(29, 255, 143, .035) 1px, transparent 1px),
+        var(--bg);
+      background-size: 34px 34px;
       color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Cascadia Mono", "JetBrains Mono", Consolas, monospace;
       line-height: 1.5;
     }
 
-    main {
-      width: min(920px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 42px 0;
-    }
-
-    header {
-      display: grid;
-      gap: 18px;
-      padding: 30px 0 24px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .eyebrow {
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(38px, 8vw, 86px);
-      line-height: .92;
-      letter-spacing: 0;
-      font-weight: 800;
-    }
-
-    .lead {
-      max-width: 720px;
-      color: var(--muted);
-      font-size: 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr);
-      gap: 18px;
-      margin-top: 22px;
-    }
-
-    section {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      padding: 22px;
-    }
-
-    h2 {
-      margin: 0 0 14px;
-      font-size: 20px;
-      letter-spacing: 0;
-    }
-
-    p {
-      margin: 0 0 14px;
-      color: var(--muted);
-    }
-
-    ol, ul {
-      margin: 0;
-      padding-left: 20px;
-      color: var(--muted);
-    }
-
-    li + li {
-      margin-top: 8px;
-    }
-
-    .install {
-      display: grid;
-      place-items: center;
-      min-height: 156px;
-      background: var(--soft);
-      border: 1px solid var(--line);
-      margin: 18px 0;
-      padding: 20px;
-    }
-
-    esp-web-install-button {
-      --esp-tools-button-color: #000;
-      --esp-tools-button-text-color: #fff;
-      --esp-tools-button-border-radius: 0;
-    }
-
-    .meta {
-      display: grid;
-      gap: 10px;
-      font-size: 14px;
-      color: var(--muted);
-    }
-
-    .meta div {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--line);
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(255, 255, 255, .035) 0,
+        rgba(255, 255, 255, .035) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+      mix-blend-mode: screen;
+      opacity: .2;
+      z-index: 20;
     }
 
     a {
-      color: var(--text);
+      color: var(--cyan);
+      text-decoration: none;
+    }
+
+    a:hover {
       text-decoration: underline;
       text-underline-offset: 4px;
     }
 
-    footer {
-      margin-top: 22px;
-      padding-top: 22px;
-      border-top: 1px solid var(--line);
+    .wrap {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 18px 0 36px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      min-height: 52px;
+      border: 1px solid var(--line-soft);
+      background: rgba(7, 17, 14, .88);
+      padding: 10px 12px;
+      box-shadow: 0 0 28px var(--shadow);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-size: 13px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--line);
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      background: var(--line);
+      box-shadow: 0 0 12px var(--line);
+    }
+
+    .lang {
+      display: flex;
+      gap: 6px;
+    }
+
+    button,
+    .link-button,
+    esp-web-install-button button {
+      border: 1px solid var(--line);
+      background: #0c1f18;
+      color: var(--text);
+      font: inherit;
+      min-height: 42px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: transform .14s ease, box-shadow .14s ease, background .14s ease;
+    }
+
+    button:hover,
+    .link-button:hover,
+    esp-web-install-button button:hover {
+      background: var(--line);
+      color: #011007;
+      box-shadow: 0 0 22px var(--shadow);
+      text-decoration: none;
+    }
+
+    button:active,
+    .link-button:active,
+    esp-web-install-button button:active {
+      transform: translateY(1px);
+    }
+
+    .lang button {
+      min-height: 34px;
+      padding: 6px 10px;
+      color: var(--muted);
+    }
+
+    .lang button.active {
+      background: var(--line);
+      color: #011007;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(300px, .95fr);
+      gap: 18px;
+      align-items: stretch;
+      margin-top: 18px;
+    }
+
+    .terminal {
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, rgba(7, 17, 14, .96), rgba(3, 9, 7, .96));
+      min-height: 510px;
+      padding: clamp(18px, 3vw, 30px);
+      box-shadow: 0 0 34px var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .terminal::before {
+      content: "root@cyberdeck:~$";
+      display: block;
+      color: var(--amber);
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 8vw, 88px);
+      line-height: .9;
+      letter-spacing: 0;
+      color: var(--line);
+      text-shadow: 0 0 18px rgba(29, 255, 143, .45);
+    }
+
+    .subtitle {
+      max-width: 660px;
+      margin: 18px 0 0;
+      color: var(--text);
+      font-size: clamp(16px, 2vw, 20px);
+    }
+
+    .install-box {
+      margin-top: 26px;
+      border: 1px solid var(--line-soft);
+      background: #050b09;
+      padding: 18px;
+    }
+
+    .install-title {
+      margin: 0 0 12px;
+      color: var(--amber);
+      font-size: 14px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    esp-web-install-button {
+      display: block;
+      --esp-tools-button-color: var(--line);
+      --esp-tools-button-text-color: #001008;
+      --esp-tools-button-border-radius: 0;
+      --esp-tools-button-border-color: var(--line);
+    }
+
+    .install-button {
+      width: 100%;
+      min-height: 58px;
+      background: var(--line);
+      color: #001008;
+      font-size: clamp(18px, 4vw, 28px);
+      font-weight: 800;
+      text-transform: uppercase;
+      box-shadow: 0 0 28px rgba(29, 255, 143, .3);
+    }
+
+    .install-button:hover {
+      background: var(--amber);
+      color: #080600;
+    }
+
+    .notice {
+      display: block;
+      color: var(--hot);
+      padding: 12px;
+      border: 1px solid var(--hot);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .step {
+      border: 1px solid var(--line-soft);
+      background: rgba(12, 31, 24, .6);
+      padding: 12px;
+      min-height: 74px;
+    }
+
+    .step b {
+      color: var(--cyan);
+      display: block;
+      margin-bottom: 4px;
+      font-size: 13px;
+    }
+
+    .step span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .device {
+      border: 1px solid var(--line-soft);
+      background: #030807;
+      min-height: 510px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      overflow: hidden;
+    }
+
+    .screen-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid var(--line-soft);
+      padding: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .screen {
+      display: grid;
+      place-items: center;
+      padding: 16px;
+    }
+
+    .screen img {
+      width: min(100%, 420px);
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border: 1px solid var(--line);
+      box-shadow: 0 0 26px rgba(38, 217, 255, .18);
+    }
+
+    .download-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      border-top: 1px solid var(--line-soft);
+      padding: 12px;
+    }
+
+    .link-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 13px;
+      min-height: 44px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    section {
+      border: 1px solid var(--line-soft);
+      background: rgba(7, 17, 14, .92);
+      padding: 18px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      color: var(--line);
+      font-size: 18px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    p,
+    li,
+    .kv {
       color: var(--muted);
       font-size: 14px;
     }
 
-    @media (max-width: 760px) {
-      main {
-        width: min(100% - 24px, 920px);
-        padding: 24px 0;
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    .kv {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(141, 191, 166, .15);
+    }
+
+    .kv strong {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 16px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .en {
+      display: none;
+    }
+
+    html[lang="en"] .es {
+      display: none;
+    }
+
+    html[lang="en"] .en {
+      display: inline;
+    }
+
+    html[lang="en"] .en.block {
+      display: block;
+    }
+
+    .es.block {
+      display: block;
+    }
+
+    @media (max-width: 860px) {
+      .hero,
+      .grid,
+      .steps {
+        grid-template-columns: 1fr;
       }
 
-      .grid {
+      .terminal,
+      .device {
+        min-height: auto;
+      }
+
+      .download-bar {
         grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <main>
-    <header>
-      <div class="eyebrow">ESP32 Web Flasher</div>
-      <h1>ESP32-TOOLS MODERN</h1>
-      <p class="lead">Firmware multi-herramienta para ESP32 con interfaz moderna, herramientas WiFi, Bluetooth, radio 2.4 GHz, Evil Portal, scanner, monitor y utilidades de sistema.</p>
-    </header>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <span class="pulse"></span>
+        <span>CYBERDECK MINI ESP32 // WEB FLASHER</span>
+      </div>
+      <div class="lang" aria-label="Language">
+        <button type="button" id="btn-es" class="active" onclick="setLang('es')">ES</button>
+        <button type="button" id="btn-en" onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+
+    <main class="hero">
+      <div class="terminal">
+        <h1>CYBERDECK<br>MINI ESP32</h1>
+        <p class="subtitle es block">Flashea el firmware completo para ESP32-S3 con TFT ST7789, GPS, microSD, doble nRF24, WiFi, BLE y herramientas defensivas.</p>
+        <p class="subtitle en block">Flash the complete ESP32-S3 firmware with ST7789 TFT, GPS, microSD, dual nRF24, WiFi, BLE and defensive tools.</p>
+
+        <div class="install-box">
+          <p class="install-title es block">Instalador seguro por navegador</p>
+          <p class="install-title en block">Browser-based secure installer</p>
+          <esp-web-install-button manifest="manifest.json">
+            <button slot="activate" class="install-button">
+              <span class="es">INSTALAR FIRMWARE</span>
+              <span class="en">INSTALL FIRMWARE</span>
+            </button>
+            <span slot="unsupported" class="notice">
+              <span class="es">Navegador no compatible. Usa Chrome, Edge u Opera en escritorio.</span>
+              <span class="en">Browser not supported. Use Chrome, Edge or Opera on desktop.</span>
+            </span>
+            <span slot="not-allowed" class="notice">
+              <span class="es">Web Serial bloqueado. Abre esta pagina con HTTPS o localhost.</span>
+              <span class="en">Web Serial blocked. Open this page through HTTPS or localhost.</span>
+            </span>
+          </esp-web-install-button>
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <b>01 USB</b>
+            <span class="es">Conecta el ESP32-S3 con cable de datos.</span>
+            <span class="en">Connect the ESP32-S3 using a data cable.</span>
+          </div>
+          <div class="step">
+            <b>02 PUERTO</b>
+            <span class="es">Pulsa instalar y elige el puerto serial correcto.</span>
+            <span class="en">Press install and choose the correct serial port.</span>
+          </div>
+          <div class="step">
+            <b>03 BOOT</b>
+            <span class="es">Si falla, manten BOOT al iniciar el flash.</span>
+            <span class="en">If it fails, hold BOOT when flashing starts.</span>
+          </div>
+          <div class="step">
+            <b>04 RESET</b>
+            <span class="es">Reinicia la placa al terminar.</span>
+            <span class="en">Reset the board after flashing finishes.</span>
+          </div>
+        </div>
+      </div>
+
+      <aside class="device">
+        <div class="screen-label">
+          <span>LIVE BUILD</span>
+          <span>ESP32-S3 / 8MB</span>
+        </div>
+        <div class="screen">
+          <img src="img/menu_principal.JPG" alt="CYBERDECK MINI ESP32 menu principal">
+        </div>
+        <div class="download-bar">
+          <a class="link-button" href="archivos%20bin/CYBERDECK-MINI-ESP32-firmware-merged.bin" download>
+            <span class="es">Descargar BIN general</span>
+            <span class="en">Download merged BIN</span>
+          </a>
+          <a class="link-button" href="archivos%20bin/FLASH_OFFSETS.txt" download>
+            <span class="es">Offsets externos</span>
+            <span class="en">External offsets</span>
+          </a>
+        </div>
+      </aside>
+    </main>
 
     <div class="grid">
       <section>
-        <h2>Flashear desde el navegador</h2>
-        <p>Usa Chrome, Edge u otro navegador compatible con Web Serial. Conecta el ESP32 por USB, pulsa instalar y selecciona el puerto serial correcto.</p>
-        <div class="install">
-          <esp-web-install-button manifest="manifest.json">
-            <button slot="activate">Instalar firmware</button>
-            <span slot="unsupported">Tu navegador no soporta Web Serial. Usa Chrome o Edge en escritorio.</span>
-            <span slot="not-allowed">Web Serial esta bloqueado. Abre esta pagina con HTTPS o localhost.</span>
-          </esp-web-install-button>
-        </div>
-        <ol>
-          <li>Conecta tu ESP32 por USB.</li>
-          <li>Si tu placa lo requiere, manten presionado BOOT al iniciar el flasheo.</li>
-          <li>Selecciona el puerto serial y espera a que termine.</li>
-          <li>Reinicia el ESP32 despues de flashear.</li>
-        </ol>
+        <h2>Build</h2>
+        <div class="kv"><span>Chip</span><strong>ESP32-S3</strong></div>
+        <div class="kv"><span>Flash</span><strong>8 MB</strong></div>
+        <div class="kv"><span>Board</span><strong>DevKitC-1 N8</strong></div>
+        <div class="kv"><span>Offset</span><strong>0x0 merged</strong></div>
       </section>
 
       <section>
-        <h2>Build incluido</h2>
-        <div class="meta">
-          <div><span>Chip</span><strong>ESP32</strong></div>
-          <div><span>Firmware</span><strong>3.0-modern</strong></div>
-          <div><span>Archivo</span><strong>firmware-merged.bin</strong></div>
-          <div><span>Framework</span><strong>Arduino + PlatformIO</strong></div>
-        </div>
+        <h2><span class="es">Incluye</span><span class="en">Includes</span></h2>
+        <ul>
+          <li>GPS Tools Pro</li>
+          <li>MicroSD Manager</li>
+          <li>WiFi / BLE defense tools</li>
+          <li>Radio spectrum + RF baseline</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2><span class="es">Uso etico</span><span class="en">Ethical use</span></h2>
+        <p class="es block">Usalo solo en tus redes, tus dispositivos o laboratorios con autorizacion. El firmware esta orientado a aprendizaje, diagnostico y defensa.</p>
+        <p class="en block">Use it only on your own networks, devices or authorized labs. This firmware is focused on learning, diagnostics and defense.</p>
       </section>
     </div>
 
-    <section style="margin-top: 18px;">
-      <h2>Uso responsable</h2>
-      <p>Este firmware es para aprendizaje, auditoria y pruebas en redes o dispositivos propios o con autorizacion. Algunas funciones pueden interferir con comunicaciones inalambricas o capturar datos si se usan mal.</p>
-      <p>El usuario es responsable de cumplir las leyes locales y de usarlo solo en entornos controlados.</p>
-    </section>
-
     <footer>
-      PepeAngell · <a href="https://github.com/pepeangell5/ESP32-TOOLS-MODERN">GitHub</a> · <a href="https://instagram.com/pepeangelll">Instagram</a> · <a href="https://www.facebook.com/esp32tools/">Facebook</a>
+      <span>PepeAngell // CYBERDECK MINI ESP32</span>
+      <span>
+        <a href="https://github.com/pepeangell5/CYBERDECK-MINI-ESP32">GitHub</a>
+        /
+        <a href="https://instagram.com/pepeangelll">Instagram</a>
+        /
+        <a href="https://www.facebook.com/esp32tools/">Facebook</a>
+      </span>
     </footer>
-  </main>
+  </div>
+
+  <script>
+    function setLang(lang) {
+      document.documentElement.lang = lang;
+      document.getElementById("btn-es").classList.toggle("active", lang === "es");
+      document.getElementById("btn-en").classList.toggle("active", lang === "en");
+      try {
+        localStorage.setItem("cyberdeck_lang", lang);
+      } catch (err) {}
+    }
+
+    try {
+      const saved = localStorage.getItem("cyberdeck_lang");
+      const browser = (navigator.language || "es").toLowerCase();
+      setLang(saved || (browser.startsWith("en") ? "en" : "es"));
+    } catch (err) {
+      setLang("es");
+    }
+  </script>
 </body>
 </html>

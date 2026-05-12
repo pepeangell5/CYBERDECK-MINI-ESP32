@@ -1,0 +1,15 @@
+CYBERDECK MINI ESP32 - FLASH FILES
+
+Web flasher / one-file flash:
+0x00000000  CYBERDECK-MINI-ESP32-firmware-merged.bin
+
+External tools / manual flash:
+0x00000000  bootloader.bin
+0x00008000  partitions.bin
+0x0000E000  boot_app0.bin
+0x00010000  firmware.bin
+
+Notes:
+- The three main files for external tools are bootloader.bin, partitions.bin and firmware.bin.
+- boot_app0.bin is also included because Arduino ESP32-S3 builds normally flash it at 0xE000.
+- Board target: ESP32-S3 DevKitC-1 N8 / 8MB flash.

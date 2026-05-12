@@ -1,15 +1,15 @@
 {
-  "name": "ESP32-TOOLS MODERN",
-  "version": "3.0-modern",
-  "home_assistant_domain": "esp32_tools_modern",
-  "funding_url": "https://github.com/pepeangell5/ESP32-TOOLS-MODERN",
+  "name": "CYBERDECK MINI ESP32",
+  "version": "1.0.0",
+  "home_assistant_domain": "cyberdeck_mini_esp32",
+  "funding_url": "https://github.com/pepeangell5/CYBERDECK-MINI-ESP32",
   "new_install_prompt_erase": true,
   "builds": [
     {
-      "chipFamily": "ESP32",
+      "chipFamily": "ESP32-S3",
       "parts": [
         {
-          "path": "firmware/firmware-merged.bin",
+          "path": "archivos%20bin/CYBERDECK-MINI-ESP32-firmware-merged.bin",
           "offset": 0
         }
       ]
