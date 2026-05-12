@@ -1,8 +1,19 @@
 # CYBERDECK MINI ESP32
 
+[![Web Flasher](https://img.shields.io/badge/WEB_FLASHER-INSTALAR-1dff8f?style=for-the-badge&logo=espressif&logoColor=001008)](https://pepeangell5.github.io/CYBERDECK-MINI-ESP32/)
+[![GitHub](https://img.shields.io/badge/GITHUB-pepeangell5-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pepeangell5)
+[![Instagram](https://img.shields.io/badge/INSTAGRAM-pepeangelll-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/pepeangelll)
+[![Facebook](https://img.shields.io/badge/FACEBOOK-ESP32_TOOLS-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/esp32tools/)
+
 Firmware para un cyberdeck portatil basado en ESP32-S3, pantalla TFT ST7789 240x320, doble radio nRF24L01, GPS NEO-6M, microSD, encoder y botones fisicos. El proyecto esta pensado para aprendizaje, monitoreo defensivo, diagnostico de hardware y demostraciones de ciberseguridad dentro de un marco legal y etico.
 
 > Usa este firmware solo en redes, laboratorios y dispositivos propios o con autorizacion explicita. Las herramientas de radio, WiFi y Bluetooth deben usarse de forma responsable para pruebas, auditoria y educacion.
+
+## Web Flasher
+
+Flashea el firmware completo desde Chrome, Edge u Opera usando ESP Web Tools:
+
+https://pepeangell5.github.io/CYBERDECK-MINI-ESP32/
 
 ![Menu principal](img/menu_principal.JPG)
 
@@ -162,17 +173,27 @@ pio run -t upload
 
 Si PlatformIO no detecta el puerto, revisa el cable USB, drivers y modo BOOT del ESP32-S3.
 
+## Modos de flasheo
+
+| Modo | Uso recomendado | Archivo / pagina |
+| --- | --- | --- |
+| Web Flasher | Instalacion rapida desde navegador compatible con Web Serial | https://pepeangell5.github.io/CYBERDECK-MINI-ESP32/ |
+| BIN general | Flasheo de un solo archivo con herramientas externas | `archivos bin/CYBERDECK-MINI-ESP32-firmware-merged.bin` en offset `0x0` |
+| BIN separados | Flasheo manual avanzado | `bootloader.bin` `0x0`, `partitions.bin` `0x8000`, `boot_app0.bin` `0xE000`, `firmware.bin` `0x10000` |
+| PlatformIO | Desarrollo y carga directa desde el proyecto | `pio run -t upload` |
+
 ## Estructura relevante
 
 ```text
 include/      Headers del firmware
 src/          Codigo principal
 img/          Capturas usadas por este README
-firmware/     Binarios para flasher/web tools
+archivos bin/ Binarios para flasher web y herramientas externas
 ```
 
 ## Redes
 
+- Web Flasher: https://pepeangell5.github.io/CYBERDECK-MINI-ESP32/
 - Instagram: https://instagram.com/pepeangelll
 - Facebook: https://www.facebook.com/esp32tools/
 - GitHub: https://github.com/pepeangell5
