@@ -16,6 +16,7 @@
 #include "BLEScanner.h"
 #include "BLESpam.h"
 #include "BTDisruptor.h"
+#include "bt_jammer.h"
 #include "BeaconSpam.h"
 #include "Deauther.h"
 #include "EvilPortal.h"
@@ -409,7 +410,8 @@ static void handlerBT() {
         "BLE Defense",
         "BLE Scanner",
         "BLE Spam",
-        "BT Disruptor"
+        "BT Disruptor",
+        "BT Jammer"
     };
 
     bool exitSub = false;
@@ -422,6 +424,7 @@ static void handlerBT() {
             case  1: runBLEScanner();  break;
             case  2: runBLESpam();     break;
             case  3: runBTDisruptor(); break;
+            case  4: runBTJammer();    break;
         }
     }
 }

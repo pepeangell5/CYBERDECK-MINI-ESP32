@@ -4,9 +4,9 @@
 #include <BLEAdvertising.h>
 #include <esp_bt.h>
 #include <esp_gap_ble_api.h>
+#include "Input.h"
 #include "PepeDraw.h"
 #include "Pins.h"
-#include "Input.h"
 #include "SoundUtils.h"
 
 extern DisplayTFT tft;
@@ -112,6 +112,28 @@ static const int GOOGLE_COUNT = sizeof(GOOGLE_MODELS) / sizeof(GoogleModel);
 static volatile unsigned long packetsSent = 0;
 static String  currentDeviceName = "";
 static SpamMode activeMode = SPAM_APPLE;
+
+static void prepareBleSpamDisplay() {
+    pinMode(TFT_CS_PIN, OUTPUT);
+    pinMode(NRF1_CSN_PIN, OUTPUT);
+    pinMode(NRF2_CSN_PIN, OUTPUT);
+    pinMode(NRF1_CE_PIN, OUTPUT);
+    pinMode(NRF2_CE_PIN, OUTPUT);
+
+    digitalWrite(NRF1_CE_PIN, LOW);
+    digitalWrite(NRF2_CE_PIN, LOW);
+    digitalWrite(NRF1_CSN_PIN, HIGH);
+    digitalWrite(NRF2_CSN_PIN, HIGH);
+    digitalWrite(TFT_CS_PIN, HIGH);
+    delayMicroseconds(80);
+}
+
+static void clearBleSpamScreen() {
+    prepareBleSpamDisplay();
+    tft.fillScreen(TFT_BLACK);
+    delay(12);
+    tft.fillRect(0, 0, 320, 240, TFT_BLACK);
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 //  GENERACIÓN DE MAC ALEATORIA (evita que los dispositivos "recuerden" la MAC
@@ -240,7 +262,7 @@ static void sendSpamPacket(BLEAdvertising* adv, SpamMode mode) {
 //  DISCLAIMER INICIAL
 // ═══════════════════════════════════════════════════════════════════════════
 static bool showDisclaimer() {
-    tft.fillScreen(TFT_BLACK);
+    clearBleSpamScreen();
     tft.drawRect(0, 0, 320, 240, UI_MAIN);
 
     drawStringBig(35, 12, "WARNING!", UI_SELECT, 2);
@@ -270,19 +292,18 @@ static bool showDisclaimer() {
 
     // Esperar respuesta
     while (true) {
-        if (navEnterPressed()) {
+        if (isEnterPressed()) {
             beep(2200, 60);
-            while (isEnterPressed() || isBackPressed()) delay(5);
-            delay(100);
-            flushNavInput();
+            while (isEnterPressed()) delay(5);
+            flushNavInput(80);
             return true;
         }
-        if (isBackPressed() || navUpPressed() || navDownPressed()) {
+        if (isBackPressed() || digitalRead(BTN_UP) == LOW ||
+            digitalRead(BTN_DOWN) == LOW) {
             beep(1000, 80);
-            while (isBackPressed() || navUpPressed() || navDownPressed())
-                delay(5);
-            delay(100);
-            flushNavInput();
+            while (isBackPressed() || digitalRead(BTN_UP) == LOW ||
+                   digitalRead(BTN_DOWN) == LOW) delay(5);
+            flushNavInput(80);
             return false;
         }
         delay(20);
@@ -293,7 +314,7 @@ static bool showDisclaimer() {
 //  MENÚ DE SELECCIÓN DE MODO
 // ═══════════════════════════════════════════════════════════════════════════
 static void drawModeMenu(int cursor) {
-    tft.fillScreen(TFT_BLACK);
+    clearBleSpamScreen();
     tft.drawRect(0, 0, 320, 240, UI_MAIN);
 
     drawStringBig(10, 8, "BLE SPAM", UI_MAIN, 1);
@@ -318,32 +339,30 @@ static void drawModeMenu(int cursor) {
 static int selectMode() {
     int cursor = 0;
     drawModeMenu(cursor);
-    flushNavInput();
 
     while (true) {
         if (isBackPressed()) {
             beep(1000, 50);
             while (isBackPressed()) delay(5);
-            delay(70);
-            flushNavInput();
+            flushNavInput(80);
             return -1;
         }
-        if (navUpPressed()) {
+        if (digitalRead(BTN_UP) == LOW) {
             cursor = (cursor - 1 + MODE_COUNT) % MODE_COUNT;
             beep(2100, 20);
             drawModeMenu(cursor);
             delay(180);
         }
-        if (navDownPressed()) {
+        if (digitalRead(BTN_DOWN) == LOW) {
             cursor = (cursor + 1) % MODE_COUNT;
             beep(2100, 20);
             drawModeMenu(cursor);
             delay(180);
         }
-        if (navEnterPressed()) {
+        if (isEnterPressed()) {
             bool held = waitOkReleaseWasLong();
             beep(held ? 1000 : 1800, 50);
-            delay(100);
+            flushNavInput(80);
             if (held) return -1;
             return cursor;
         }
@@ -355,7 +374,7 @@ static int selectMode() {
 //  PANTALLA DE ATAQUE ACTIVO
 // ═══════════════════════════════════════════════════════════════════════════
 static void drawAttackFrame(SpamMode mode) {
-    tft.fillScreen(TFT_BLACK);
+    clearBleSpamScreen();
     tft.drawRect(0, 0, 320, 240, UI_SELECT);   // borde naranja = activo
     tft.drawRect(1, 1, 318, 238, UI_SELECT);
 
@@ -415,11 +434,12 @@ void runBLESpam() {
 
     // Esperar liberación de OK
     while (isEnterPressed() || isBackPressed()) delay(5);
-    delay(100);
-    flushNavInput();
+    flushNavInput(100);
+    prepareBleSpamDisplay();
 
     // Disclaimer
     if (!showDisclaimer()) {
+        clearBleSpamScreen();
         // Usuario canceló
         return;
     }
@@ -480,8 +500,9 @@ void runBLESpam() {
             // BACK o OK HOLD para parar
             if (isBackPressed()) {
                 stopAttack = true;
-            }
-            if (navEnterPressed()) {
+                while (isBackPressed()) delay(5);
+                flushNavInput(80);
+            } else if (isEnterPressed()) {
                 if (!okHeld) {
                     okPressStart = millis();
                     okHeld = true;
@@ -504,8 +525,8 @@ void runBLESpam() {
 
         // Esperar liberación OK
         while (isEnterPressed() || isBackPressed()) delay(5);
-        delay(150);
-        flushNavInput();
+        clearBleSpamScreen();
+        flushNavInput(120);
 
         // Volver al menú de selección de modo (loop)
     }
