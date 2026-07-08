@@ -2,7 +2,7 @@
 
 [![Web Flasher](https://img.shields.io/badge/WEB_FLASHER-INSTALAR-1dff8f?style=for-the-badge&logo=espressif&logoColor=001008)](https://pepeangell5.github.io/CYBERDECK-MINI-ESP32/)
 [![GitHub](https://img.shields.io/badge/GITHUB-pepeangell5-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/pepeangell5)
-[![Instagram](https://img.shields.io/badge/INSTAGRAM-pepeangelll-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/pepeangelll)
+[![Instagram](https://img.shields.io/badge/INSTAGRAM-esp32_tools-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://instagram.com/esp32_tools)
 [![Facebook](https://img.shields.io/badge/FACEBOOK-ESP32_TOOLS-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/esp32tools/)
 
 Firmware para un cyberdeck portatil basado en ESP32-S3, pantalla TFT ST7789 240x320, doble radio nRF24L01, GPS NEO-6M, microSD, encoder y botones fisicos. El proyecto esta pensado para aprendizaje, monitoreo defensivo, diagnostico de hardware y demostraciones de ciberseguridad dentro de un marco legal y etico.
@@ -194,7 +194,7 @@ archivos bin/ Binarios para flasher web y herramientas externas
 ## Redes
 
 - Web Flasher: https://pepeangell5.github.io/CYBERDECK-MINI-ESP32/
-- Instagram: https://instagram.com/pepeangelll
+- Instagram: https://instagram.com/esp32_tools
 - Facebook: https://www.facebook.com/esp32tools/
 - GitHub: https://github.com/pepeangell5
 
